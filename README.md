@@ -60,10 +60,6 @@ Unlike C#, Haskell creates new filtered lists instead of modifying the original 
 | Execution Time | 1.595s | Exceeded 5s |
 | Memory | 409.3 MB | 4.5 MB |
 
-The Haskell timeout was expected, as the assignment allows functional implementations scoring above 70%.
-
-Both solutions satisfy the assignment requirements.
-
 ## Performance Comparison
 
 **Why did C# use more memory?**
@@ -86,5 +82,104 @@ C# modifies elements directly inside an existing array, while Haskell performs r
 | Initial storage | O(n) | Lazy, as needed |
 | Additional space | O(1) | Depends on evaluation |
 
-## Bonus
+# Bonus
+
+# Array Elimination — Mathematical Approach (C#)
+
+## Description
+
+After solving the problem using array processing in C# and recursion in Haskell, I also explored a mathematical approach to find the remaining number without creating an array.
+
+## Finding the Pattern
+
+I noticed that the same results appear multiple times for different input values.
+
+After testing the algorithm, I found the following pattern:
+
+| Number | Times Appeared |
+|---|---:|
+| 1 | 2 |
+| 3 | 12 |
+| 15 | 72 |
+| 87 | 432 |
+| 519 | 2,592 |
+| 3111 | 15,552 |
+
+Each number appears **6 times more often** than the previous one.
+
+The resulting numbers also follow a pattern:
+
+`1 → 3 → 15 → 87 → 519 → 3111`
+
+Each next number can be calculated using:
+
+`result = result * 6 - 3`
+
+## Implementation
+
+Instead of processing an entire array, I used two variables:
+
+- `result` — stores the number that will remain.
+- `section` — represents the last input value for which the current result is valid.
+
+The initial values are:
+
+```csharp
+long section = 2;
+long result = 1;
+```
+
+For every next section, I update:
+
+```csharp
+section = section * 6 + 2;
+result = result * 6 - 3;
+```
+
+The loop continues until `section` reaches or exceeds the input `n`.
+
+## C# Code
+
+```csharp
+
+        int n = Convert.ToInt32(Console.ReadLine());
+        long section = 2;
+        long result = 1;
+        while (n > section)
+        {
+            section = section * 6 + 2;
+            result = result * 6 - 3;
+        }
+        Console.WriteLine(result);
+  
+```
+
+## E-Olymp Result
+
+- **Compiler:** C# (Microsoft .NET 10)
+- **Score:** 100 / 100
+- **Execution Time:** 0.062s
+- **Memory:** 28 MB
+- **Verdict:** Accepted
+
+## Performance Comparison
+
+| | C# (Array) | Haskell (List) | C# (Formula) |
+|---|---|---|---|
+| Score | 100/100 | 97/100 | 100/100 |
+| Execution Time | 1.595s | Time Limit Exceeded (5s) | **0.062s** |
+| Memory | 409.3 MB | 4.5 MB | **28 MB** |
+| Time Complexity | O(n) | O(n) | **O(log n)** |
+| Additional Space | O(1) | Depends on evaluation | O(1) |
+
+The mathematical solution was approximately **25.7 times faster** than the array-based C# implementation and used significantly less memory.
+
+## Conclusion
+
+The mathematical approach achieved **100/100**, with an execution time of only **0.062 seconds** and **28 MB** of memory usage.
+
+Unlike the previous implementations, this solution avoids creating and processing arrays or lists, making it significantly more efficient.
+
+However, since the original assignment specifically requires array/list processing, I kept the imperative C# and functional Haskell implementations as my main solutions.
+
 
